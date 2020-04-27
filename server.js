@@ -25,11 +25,11 @@ const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 // CODELAB: Change this to add a delay (ms) before the server responds.
 const FORECAST_DELAY = 0;
 
-// CODELAB: If running locally, set your Dark Sky API key here
-const API_KEY = process.env.DARKSKY_API_KEY;
-const BASE_URL = `https://api.darksky.net/forecast`;
+// CODELAB: If running locally, set your Open Weather Map API key here
+const API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY || "";
+const BASE_URL = 'https://api.openweathermap.org/data/2.5/onecall'; // `http://api.openweathermap.org/data/2.5/weather`;
 
-// Fake forecast data used if we can't reach the Dark Sky API
+// Fake forecast data used if we can't reach the Open Weather Map API
 const fakeForecast = {
   fakeData: true,
   latitude: 0,
@@ -131,29 +131,41 @@ function generateFakeForecast(location) {
   return result;
 }
 
-
 /**
- * Gets the weather forecast from the Dark Sky API for the given location.
+ * Gets the weather forecast from the Open Weather Map API for the given location.
  *
  * @param {Request} req request object from Express.
  * @param {Response} resp response object from Express.
  */
 function getForecast(req, resp) {
-  const location = req.params.location || '40.7720232,-73.9732319';
-  const url = `${BASE_URL}/${API_KEY}/${location}`;
-  fetch(url).then((resp) => {
-    if (resp.status !== 200) {
-      throw new Error(resp.statusText);
-    }
-    return resp.json();
-  }).then((data) => {
-    setTimeout(() => {
-      resp.json(data);
-    }, FORECAST_DELAY);
-  }).catch((err) => {
-    console.error('Dark Sky API Error:', err.message);
-    resp.json(generateFakeForecast(location));
-  });
+  const location = req.params.location || '40.7720232, -73.9732319';
+  const commaAt = location.indexOf(',');
+
+  const latitude = parseFloat(location.substr(0, commaAt));
+  const longitude = parseFloat(location.substr(commaAt + 1));
+
+  const url = `${BASE_URL}?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+
+  console.log(url);
+  
+  fetch(url)
+    .then((resp) => {
+      if (resp.status !== 200) {
+        throw new Error(resp.statusText);
+      }
+      return resp.json();
+    })
+    .then((data) => {
+      setTimeout(() => {
+        console.log(data);
+
+        resp.json(data);
+      }, FORECAST_DELAY);
+    })
+    .catch((err) => {
+      console.error('Open Weather Map API Error:', err.message);
+      resp.json(generateFakeForecast(location));
+    });
 }
 
 /**
