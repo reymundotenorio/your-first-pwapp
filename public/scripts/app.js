@@ -40,7 +40,7 @@ function addLocation() {
   const selected = select.options[select.selectedIndex];
   const geo = selected.value;
   const label = selected.textContent;
-  const location = {label: label, geo: geo};
+  const location = { label: label, geo: geo };
   // Create a new card & get the weather data from the server
   const card = getForecastCard(location);
   getForecastFromNetwork(geo).then((forecast) => {
@@ -83,53 +83,34 @@ function renderForecast(card, data) {
   const lastUpdated = parseInt(cardLastUpdated);
 
   // If the data on the element is newer, skip the update.
-  if (lastUpdated >= data.currently.time) {
+  if (lastUpdated >= data.current.dt) {
     return;
   }
-  cardLastUpdatedElem.textContent = data.currently.time;
+  cardLastUpdatedElem.textContent = data.current.dt;
 
   // Render the forecast data into the card.
-  card.querySelector('.description').textContent = data.currently.summary;
-  const forecastFrom = luxon.DateTime
-      .fromSeconds(data.currently.time)
-      .setZone(data.timezone)
-      .toFormat('DDDD t');
+  card.querySelector('.description').textContent = data.current.summary;
+  const forecastFrom = luxon.DateTime.fromSeconds(data.current.dt).setZone(data.timezone).toFormat('DDDD t');
   card.querySelector('.date').textContent = forecastFrom;
-  card.querySelector('.current .icon')
-      .className = `icon ${data.currently.icon}`;
-  card.querySelector('.current .temperature .value')
-      .textContent = Math.round(data.currently.temperature);
-  card.querySelector('.current .humidity .value')
-      .textContent = Math.round(data.currently.humidity * 100);
-  card.querySelector('.current .wind .value')
-      .textContent = Math.round(data.currently.windSpeed);
-  card.querySelector('.current .wind .direction')
-      .textContent = Math.round(data.currently.windBearing);
-  const sunrise = luxon.DateTime
-      .fromSeconds(data.daily.data[0].sunriseTime)
-      .setZone(data.timezone)
-      .toFormat('t');
+  card.querySelector('.current .icon').className = `icon ${data.current.icon}`;
+  card.querySelector('.current .temperature .value').textContent = Math.round(data.current.temp);
+  card.querySelector('.current .humidity .value').textContent = Math.round(data.current.humidity);
+  card.querySelector('.current .wind .value').textContent = Math.round(data.current.wind_speed);
+  card.querySelector('.current .wind .direction').textContent = Math.round(data.current.wind_deg);
+  const sunrise = luxon.DateTime.fromSeconds(data.daily[0].sunrise).setZone(data.timezone).toFormat('t');
   card.querySelector('.current .sunrise .value').textContent = sunrise;
-  const sunset = luxon.DateTime
-      .fromSeconds(data.daily.data[0].sunsetTime)
-      .setZone(data.timezone)
-      .toFormat('t');
+  const sunset = luxon.DateTime.fromSeconds(data.daily[0].sunset).setZone(data.timezone).toFormat('t');
   card.querySelector('.current .sunset .value').textContent = sunset;
 
   // Render the next 7 days.
   const futureTiles = card.querySelectorAll('.future .oneday');
   futureTiles.forEach((tile, index) => {
-    const forecast = data.daily.data[index + 1];
-    const forecastFor = luxon.DateTime
-        .fromSeconds(forecast.time)
-        .setZone(data.timezone)
-        .toFormat('ccc');
+    const forecast = data.daily[index + 1];
+    const forecastFor = luxon.DateTime.fromSeconds(forecast.dt).setZone(data.timezone).toFormat('ccc');
     tile.querySelector('.date').textContent = forecastFor;
-    tile.querySelector('.icon').className = `icon ${forecast.icon}`;
-    tile.querySelector('.temp-high .value')
-        .textContent = Math.round(forecast.temperatureHigh);
-    tile.querySelector('.temp-low .value')
-        .textContent = Math.round(forecast.temperatureLow);
+    tile.querySelector('.icon').className = `icon ${forecast.weather[0].icon}`;
+    tile.querySelector('.temp-high .value').textContent = Math.round(forecast.temp.max);
+    tile.querySelector('.temp-low .value').textContent = Math.round(forecast.temp.min);
   });
 
   // If the loading spinner is still visible, remove it.
@@ -147,12 +128,12 @@ function renderForecast(card, data) {
  */
 function getForecastFromNetwork(coords) {
   return fetch(`/forecast/${coords}`)
-      .then((response) => {
-        return response.json();
-      })
-      .catch(() => {
-        return null;
-      });
+    .then((response) => {
+      return response.json();
+    })
+    .catch(() => {
+      return null;
+    });
 }
 
 /**
@@ -163,7 +144,6 @@ function getForecastFromNetwork(coords) {
  */
 function getForecastFromCache(coords) {
   // CODELAB: Add code to get weather forecast from the caches object.
-
 }
 
 /**
@@ -182,8 +162,7 @@ function getForecastCard(location) {
   const newCard = document.getElementById('weather-template').cloneNode(true);
   newCard.querySelector('.location').textContent = location.label;
   newCard.setAttribute('id', id);
-  newCard.querySelector('.remove-city')
-      .addEventListener('click', removeLocation);
+  newCard.querySelector('.remove-city').addEventListener('click', removeLocation);
   document.querySelector('main').appendChild(newCard);
   newCard.removeAttribute('hidden');
   return newCard;
@@ -200,10 +179,9 @@ function updateData() {
     // CODELAB: Add code to call getForecastFromCache
 
     // Get the forecast data from the network.
-    getForecastFromNetwork(location.geo)
-        .then((forecast) => {
-          renderForecast(card, forecast);
-        });
+    getForecastFromNetwork(location.geo).then((forecast) => {
+      renderForecast(card, forecast);
+    });
   });
 }
 
@@ -234,7 +212,7 @@ function loadLocationList() {
   if (!locations || Object.keys(locations).length === 0) {
     const key = '40.7720232,-73.9732319';
     locations = {};
-    locations[key] = {label: 'New York City', geo: '40.7720232,-73.9732319'};
+    locations[key] = { label: 'New York City', geo: '40.7720232,-73.9732319' };
   }
   return locations;
 }
@@ -251,10 +229,8 @@ function init() {
   // Set up the event handlers for all of the buttons.
   document.getElementById('butRefresh').addEventListener('click', updateData);
   document.getElementById('butAdd').addEventListener('click', toggleAddDialog);
-  document.getElementById('butDialogCancel')
-      .addEventListener('click', toggleAddDialog);
-  document.getElementById('butDialogAdd')
-      .addEventListener('click', addLocation);
+  document.getElementById('butDialogCancel').addEventListener('click', toggleAddDialog);
+  document.getElementById('butDialogAdd').addEventListener('click', addLocation);
 }
 
 init();
