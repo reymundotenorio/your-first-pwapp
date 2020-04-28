@@ -92,7 +92,8 @@ function renderForecast(card, data) {
   card.querySelector('.description').textContent = data.current.summary;
   const forecastFrom = luxon.DateTime.fromSeconds(data.current.dt).setZone(data.timezone).toFormat('DDDD t');
   card.querySelector('.date').textContent = forecastFrom;
-  card.querySelector('.current .icon').className = `icon ${data.current.icon}`;
+  
+  card.querySelector('.current .icon').className = `icon ${data.current.weather[0].icon}`;
   card.querySelector('.current .temperature .value').textContent = Math.round(data.current.temp);
   card.querySelector('.current .humidity .value').textContent = Math.round(data.current.humidity);
   card.querySelector('.current .wind .value').textContent = Math.round(data.current.wind_speed);

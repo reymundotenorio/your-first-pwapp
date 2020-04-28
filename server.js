@@ -204,7 +204,7 @@ function startServer() {
   // Start the server
   return app.listen('8000', () => {
     // eslint-disable-next-line no-console
-    console.log('Local DevServer Started on port 8000...');
+    console.log('Local DevServer Started on port http://localhost:8000/');
   });
 }
 
