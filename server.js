@@ -27,11 +27,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // CODELAB: Change this to add a delay (ms) before the server responds.
-const FORECAST_DELAY = 0;
+const FORECAST_DELAY = 0; // 3000
 
 // CODELAB: If running locally, set your Open Weather Map API key here
 const API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY || '';
-const BASE_URL = 'https://api.openweathermap.org/data/2.5/onecall'; // `http://api.openweathermap.org/data/2.5/weather`;
+const BASE_URL = 'https://api.openweathermap.org/data/2.5/onecall?&units=metric'; // `http://api.openweathermap.org/data/2.5/weather`;
 
 // Fake forecast data used if we can't reach the Open Weather Map API
 const fakeForecast = {
@@ -148,7 +148,7 @@ function getForecast(req, resp) {
   const latitude = parseFloat(location.substr(0, commaAt));
   const longitude = parseFloat(location.substr(commaAt + 1));
 
-  const url = `${BASE_URL}?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+  const url = `${BASE_URL}&lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
   console.log(url);
 
   fetch(url)
