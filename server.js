@@ -22,11 +22,15 @@ const express = require('express');
 const fetch = require('node-fetch');
 const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
+// Read the .env file
+const dotenv = require('dotenv');
+dotenv.config();
+
 // CODELAB: Change this to add a delay (ms) before the server responds.
 const FORECAST_DELAY = 0;
 
 // CODELAB: If running locally, set your Open Weather Map API key here
-const API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY || "";
+const API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY || '';
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/onecall'; // `http://api.openweathermap.org/data/2.5/weather`;
 
 // Fake forecast data used if we can't reach the Open Weather Map API
@@ -145,9 +149,8 @@ function getForecast(req, resp) {
   const longitude = parseFloat(location.substr(commaAt + 1));
 
   const url = `${BASE_URL}?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
-
   console.log(url);
-  
+
   fetch(url)
     .then((resp) => {
       if (resp.status !== 200) {
@@ -157,7 +160,7 @@ function getForecast(req, resp) {
     })
     .then((data) => {
       setTimeout(() => {
-        console.log(data);
+        // console.log(data);
 
         resp.json(data);
       }, FORECAST_DELAY);
