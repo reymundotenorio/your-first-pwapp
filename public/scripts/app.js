@@ -92,8 +92,8 @@ function renderForecast(card, data) {
   card.querySelector('.description').textContent = data.current.summary;
   const forecastFrom = luxon.DateTime.fromSeconds(data.current.dt).setZone(data.timezone).toFormat('DDDD t');
   card.querySelector('.date').textContent = forecastFrom;
-  
-  card.querySelector('.current .icon').className = `icon ${data.current.weather[0].icon}`;
+
+  card.querySelector('.current .icon').style.backgroundImage = `url('http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png')`;
   card.querySelector('.current .temperature .value').textContent = Math.round(data.current.temp);
   card.querySelector('.current .humidity .value').textContent = Math.round(data.current.humidity);
   card.querySelector('.current .wind .value').textContent = Math.round(data.current.wind_speed);
@@ -109,7 +109,7 @@ function renderForecast(card, data) {
     const forecast = data.daily[index + 1];
     const forecastFor = luxon.DateTime.fromSeconds(forecast.dt).setZone(data.timezone).toFormat('ccc');
     tile.querySelector('.date').textContent = forecastFor;
-    tile.querySelector('.icon').className = `icon ${forecast.weather[0].icon}`;
+    tile.querySelector('.icon').style.backgroundImage = `url('http://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png')`;
     tile.querySelector('.temp-high .value').textContent = Math.round(forecast.temp.max);
     tile.querySelector('.temp-low .value').textContent = Math.round(forecast.temp.min);
   });
