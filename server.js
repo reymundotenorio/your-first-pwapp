@@ -177,6 +177,8 @@ function getForecast(req, resp) {
  * @return {ExpressServer} instance of the Express server.
  */
 function startServer() {
+  const fs = require('fs');
+  const https = require('https');
   const app = express();
 
   // Redirect HTTP to HTTPS,
@@ -201,11 +203,24 @@ function startServer() {
   // Handle requests for static files
   app.use(express.static('public'));
 
-  // Start the server
-  return app.listen('8000', () => {
-    // eslint-disable-next-line no-console
-    console.log('Local DevServer Started on port http://localhost:8000/');
-  });
+  // Start the server HTTPS
+  return https
+    .createServer(
+      {
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert'),
+      },
+      app
+    )
+    .listen(8000, function () {
+      console.log('Local DevServer Started on port https://localhost:8000/');
+    });
+
+  // // Start the server
+  // return app.listen('8000', () => {
+  //   // eslint-disable-next-line no-console
+  //   console.log('Local DevServer Started on port http://localhost:8000/');
+  // });
 }
 
 startServer();

@@ -52,3 +52,6 @@ specific language governing permissions and limitations under the License.
 
 [codelab]: https://codelabs.developers.google.com/codelabs/your-first-pwapp/
 [git-issue]: https://github.com/googlecodelabs/your-first-pwapp/issues
+
+
+[Running local server over HTTPS]: https://timonweb.com/posts/running-expressjs-server-over-https/
