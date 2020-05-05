@@ -179,7 +179,7 @@ function getForecast(req, resp) {
 function startServer() {
   // const fs = require('fs');
   // const https = require('https');
-  const ngrok = require('ngrok');
+  // const ngrok = require('ngrok');
   const app = express();
 
   // Redirect HTTP to HTTPS,
@@ -217,9 +217,19 @@ function startServer() {
   //     console.log('Local DevServer Started on port https://localhost:8000/');
   //   });
 
+  // Run CMD process
+  // const util = require('util');
+  // const exec = util.promisify(require('child_process').exec);
+
   // Start the server
   return app.listen(8000, () => {
     console.log('Local DevServer Started on port http://localhost:8000/');
+
+    // (async function () {
+    //   const { stdout, stderr } = await exec('ngrok.cmd https 8000');
+    //   console.log('stdout:', stdout);
+    //   console.log('stderr:', stderr);
+    // })();
 
     // (async function () {
     //   const ngrokURL = await ngrok.connect(8000);
