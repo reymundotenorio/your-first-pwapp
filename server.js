@@ -202,7 +202,7 @@ function startServer() {
   app.get('/forecast', getForecast);
 
   // Handle requests for static files
-  app.use(express.static('docs'));
+  app.use(express.static('public'));
 
   // Start the server HTTPS
   // return https
