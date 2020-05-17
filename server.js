@@ -125,7 +125,7 @@ const fakeForecast = {
  * @return {Object} forecast object.
  */
 function generateFakeForecast(location) {
-  location = location || '11.92988,-85.95602';
+  location = location || '40.7720232, -73.9732319';
   const commaAt = location.indexOf(',');
 
   // Create a new copy of the forecast
@@ -142,7 +142,7 @@ function generateFakeForecast(location) {
  * @param {Response} resp response object from Express.
  */
 function getForecast(req, resp) {
-  const location = req.params.location || '40.7720232, -73.9732319';
+  const location = req.params.location || '11.92988, -85.95602';
   const commaAt = location.indexOf(',');
 
   const latitude = parseFloat(location.substr(0, commaAt));
