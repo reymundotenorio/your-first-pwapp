@@ -125,7 +125,7 @@ const fakeForecast = {
  * @return {Object} forecast object.
  */
 function generateFakeForecast(location) {
-  location = location || '40.7720232,-73.9732319';
+  location = location || '11.92988,-85.95602';
   const commaAt = location.indexOf(',');
 
   // Create a new copy of the forecast
